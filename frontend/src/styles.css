@@ -53,16 +53,12 @@ body {
   gap: 12px;
 }
 
-.brand-mark {
+.brand-logo {
   width: 36px;
   height: 36px;
   border-radius: 9px;
-  background: var(--accent);
-  color: #fff;
-  font-weight: 700;
-  font-size: 18px;
-  display: grid;
-  place-items: center;
+  object-fit: contain;
+  display: block;
 }
 
 .brand-title {

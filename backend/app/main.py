@@ -447,6 +447,12 @@ def create_app(store: SessionStore | None = None) -> FastAPI:
         def serve_index() -> FileResponse:
             return FileResponse(static_dir / "index.html")
 
+        logo_file = static_dir / "logo.png"
+        if logo_file.is_file():
+            @app.get("/logo.png", include_in_schema=False)
+            def serve_logo() -> FileResponse:
+                return FileResponse(logo_file)
+
     return app
 
 

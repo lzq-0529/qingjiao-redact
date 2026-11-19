@@ -1,4 +1,8 @@
-# 青椒智能脱敏 · 开源社区版 (Qingjiao Redact)
+<p align="center">
+  <img src="docs/images/logo.png" alt="青椒智能脱敏 Logo" width="84">
+</p>
+
+<h1 align="center">🫑 青椒智能脱敏 · 开源社区版 (Qingjiao Redact)</h1>
 
 <p align="center">
   <strong>无需显卡，把机密文档交给 DeepSeek / GPT / Claude 前先在本地完成可逆脱敏，AI 处理后再一键 100% 严格还原。</strong>

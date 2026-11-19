@@ -304,7 +304,7 @@ export default function App() {
     <div className="app-shell">
       <header className="topbar">
         <div className="brand">
-          <div className="brand-mark">椒</div>
+          <img src="/logo.png" alt="青椒智能脱敏" className="brand-logo" />
           <div>
             <div className="brand-title">
               青椒智能脱敏 <span className="badge-oss">开源版</span>
