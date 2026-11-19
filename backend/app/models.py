@@ -4,7 +4,16 @@ from datetime import datetime, timezone
 from typing import Literal
 from pydantic import BaseModel, Field
 
-EntityType = Literal["PERSON", "ORGANIZATION", "LOCATION"]
+EntityType = Literal[
+    "PERSON",
+    "ORGANIZATION",
+    "LOCATION",
+    "PHONE",
+    "EMAIL",
+    "ID_CARD",
+    "BANK_ACCOUNT",
+    "IP_ADDRESS",
+]
 RedactionMode = Literal["placeholder", "mask", "blackout"]
 ReviewStatus = Literal["pending", "confirmed", "excluded"]
 
@@ -12,9 +21,23 @@ ENTITY_LABELS: dict[str, str] = {
     "PERSON": "人名",
     "ORGANIZATION": "机构",
     "LOCATION": "地名",
+    "PHONE": "电话",
+    "EMAIL": "邮箱",
+    "ID_CARD": "身份证号",
+    "BANK_ACCOUNT": "银行卡号",
+    "IP_ADDRESS": "IP地址",
 }
 
-ALL_ENTITY_TYPES: tuple[EntityType, ...] = ("PERSON", "ORGANIZATION", "LOCATION")
+ALL_ENTITY_TYPES: tuple[EntityType, ...] = (
+    "PERSON",
+    "ORGANIZATION",
+    "LOCATION",
+    "PHONE",
+    "EMAIL",
+    "ID_CARD",
+    "BANK_ACCOUNT",
+    "IP_ADDRESS",
+)
 
 
 class EntitySpan(BaseModel):
@@ -45,7 +68,7 @@ class DocumentSession(BaseModel):
     redacted_text: str = ""
     entities: list[EntitySpan] = Field(default_factory=list)
     mapping: dict[str, str] = Field(default_factory=dict)
-    engine: str = "modelscope-raner"
+    engine: str = "modelscope-raner+basic-regex"
     model_id: str = "iic/nlp_raner_named-entity-recognition_chinese-base-news"
     elapsed_ms: int = 0
     created_at: str = Field(

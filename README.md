@@ -1,4 +1,4 @@
-# 青椒智能脱敏 · 开源社区版 (Qingjiao Redact Community)
+# 青椒智能脱敏 · 开源社区版 (Qingjiao Redact)
 
 <p align="center">
   <strong>无需显卡，把机密文档交给 DeepSeek / GPT / Claude 前先在本地完成可逆脱敏，AI 处理后再一键 100% 严格还原。</strong>
@@ -12,12 +12,6 @@
 </p>
 
 > **官网与桌面商业版下载**：[https://qingjiaolab.com](https://qingjiaolab.com) ｜ **商业工作台在线体验**：[https://app.qingjiaolab.com](https://app.qingjiaolab.com)
-
----
-
-## 核心工作流一览（动图演示）
-
-> 以下录屏均为虚拟测试材料演示：「导入选字段 → 逐处核对与黑白名单 → 占位符映射对应 → AI 处理后按映射表一键还原」。
 
 <table>
   <tr>
@@ -61,7 +55,7 @@
 
 ## 商业版完整能力介绍（与社区版定位区分）
 
-- **开源社区版（本仓库）**：默认接入阿里 ModelScope 开源中文 NER 模型 `iic/nlp_raner_named-entity-recognition_chinese-base-news`（**纯模型，不内置商业规则引擎**），提供人名 / 机构 / 地名 3 类实体识别、三栏复核工作台、严格完整还原、CLI 与本地 `stdio` MCP Server，适合开发者学习、二次开发与轻量文本 / DOCX 场景。
+- **开源社区版（本仓库）**：默认接入阿里 ModelScope 开源中文 NER 模型 `iic/nlp_raner_named-entity-recognition_chinese-base-news` + **基础正则规则**，支持 **8 类常见实体**（模型识别：`人名` / `机构` / `地名`；基础正则：`电话` / `邮箱` / `身份证号（含校验位）` / `银行卡号（含 Luhn 校验）` / `IPv4 地址`），提供三栏复核工作台、严格完整还原、CLI 与本地 `stdio` MCP Server，适合开发者学习、二次开发与轻量文本 / DOCX 场景。
 - **青椒商业专业版（桌面端 & 在线工作台，[qingjiaolab.com](https://qingjiaolab.com)）**：
   1. **30+ 类敏感字段 + 4 类图像敏感区**：覆盖电话、邮箱、身份证号、银行账号、统一社会信用代码、律师执业证编号、案号、证券代码、金额、人名、机构全称/简称、项目名称、职位、文件名、法律法规、政策文件、地址、日期等，以及印章/签章、手写签名、二维码/条码、Logo 图形自动识别。
   2. **全格式原版保真处理**：支持 Word、Excel、PowerPoint、PDF、扫描件与图片；Word / PDF 支持**原位占位符脱敏**（保留版式，AI 处理后可还原回原版文件），对外发布支持 **PDF 底层文字彻底清除真涂黑**（非表面遮罩）与印章自动涂黑。
@@ -92,10 +86,10 @@
 
 | 对比维度 | 开源社区版（本仓库） | 青椒商业专业版（[qingjiaolab.com](https://qingjiaolab.com)） |
 | :--- | :--- | :--- |
-| **识别引擎** | 阿里开源 ModelScope RaNER `base-news`（**纯模型，无规则**） | **青椒自研高精度本地识别引擎** + 全套商业结构化校验规则 |
-| **实体覆盖范围** | **3 类**（人名 / 机构 / 地名） | **30+ 类敏感字段** + **4 类图像敏感区**（印章/签名/二维码/Logo） |
+| **识别引擎** | 阿里开源 ModelScope RaNER `base-news` + **5 类基础正则** | **青椒自研高精度本地识别引擎** + 全套商业结构化校验规则 |
+| **实体覆盖范围** | **8 类**（人名 / 机构 / 地名 + 电话 / 邮箱 / 身份证 / 银行卡 / IP） | **30+ 类敏感字段**（额外覆盖案号、统一社会信用代码、律师执业证、金额、证券代码、政策文件、法规、职位等）+ **4 类图像敏感区**（印章/签名/二维码/Logo） |
 | **名称实体 F1（实测）** | CLUENER2020 dev：<br>人名 F1 **`0.790`**（精确率 0.715 / 召回 0.884）<br>机构 F1 **`0.713`**（精确率 0.738 / 召回 0.690，覆盖召回 0.730） | 真实多文体 101 窗金标集：<br>名称综合 F1 **`0.919`**（产品流程 **`0.923`**，召回 **`0.942`**）<br>人名 **`0.982 ~ 0.991`**｜机构 **`0.936 ~ 0.942`**（公告 **`0.950`**）<br>地址 **`0.930`**｜文件名 **`0.941 ~ 0.952`**｜复合实体内层召回 **`0.942`** |
-| **结构化字段 F1** | 不支持（无正则与上下文校验规则） | 未见开发集盲测 F1 **`0.959`**（字符遮盖率 **`0.981`**），全字段综合约 **`0.94 ~ 0.956`** |
+| **结构化字段 F1** | 基础格式校验（5 类常见字段） | 30+ 类含上下文语义校验，盲测 F1 **`0.959`**（字符遮盖率 **`0.981`**），全字段综合约 **`0.94 ~ 0.956`** |
 | **运行开销 & CPU 速度** | ~400 MB（开源权重），冻结长文 ~55.3 s（~0.8 s/块） | **轻量级本地推理**，CPU 8 线程 **0.45 秒 / 千字**（无需 GPU） |
 | **支持文件格式** | `TXT` / `Markdown` / 基础 `DOCX` | **Word / Excel / PowerPoint / PDF（原位占位符 & 真涂黑）/ 扫描件 OCR / 图片** |
 | **安装与生产力** | 需自配 Python/Node 或 Docker；单篇处理 | **Windows / macOS / Linux 一键安装包（免配环境）**、文件夹批量处理、词库协同 |
@@ -178,13 +172,13 @@ docker compose up --build
 {
   "mcpServers": {
     "qingjiao-redact": {
-      "command": "/ABSOLUTE/PATH/TO/qingjiao-redact-community/.venv/bin/python",
+      "command": "/ABSOLUTE/PATH/TO/qingjiao-redact/.venv/bin/python",
       "args": ["-m", "app.mcp_server"],
       "env": {
-        "PYTHONPATH": "/ABSOLUTE/PATH/TO/qingjiao-redact-community/backend",
+        "PYTHONPATH": "/ABSOLUTE/PATH/TO/qingjiao-redact/backend",
         "QINGJIAO_NER_ENGINE": "raner",
-        "MODELSCOPE_CACHE": "/ABSOLUTE/PATH/TO/qingjiao-redact-community/.model_cache/modelscope",
-        "QINGJIAO_DATA_DIR": "/ABSOLUTE/PATH/TO/qingjiao-redact-community/data"
+        "MODELSCOPE_CACHE": "/ABSOLUTE/PATH/TO/qingjiao-redact/.model_cache/modelscope",
+        "QINGJIAO_DATA_DIR": "/ABSOLUTE/PATH/TO/qingjiao-redact/data"
       }
     }
   }
@@ -214,10 +208,11 @@ qingjiao-redact mcp
 ## 目录结构
 
 ```text
-qingjiao-redact-community/
+qingjiao-redact/
 ├── backend/
 │   ├── app/
 │   │   ├── ner.py          # 阿里 ModelScope RaNER 引擎 + EntityRecognizer 插件协议
+│   │   ├── regex_rules.py  # 基础正则引擎（电话 / 邮箱 / 身份证号 / 银行卡 / IPv4）
 │   │   ├── redactor.py     # 可逆占位符替换、人判定合并、严格完整还原
 │   │   ├── doc_io.py       # TXT / Markdown / DOCX 读写导出
 │   │   ├── main.py         # FastAPI REST API + 静态前端托管

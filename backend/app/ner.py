@@ -14,8 +14,10 @@ from pathlib import Path
 from typing import Any, Protocol, cast
 
 from .models import ALL_ENTITY_TYPES, EntitySpan, EntityType
+from .regex_rules import detect_basic_regex
 
 DEFAULT_RANER_MODEL = "iic/nlp_raner_named-entity-recognition_chinese-base-news"
+NER_ENTITY_TYPES: tuple[EntityType, ...] = ("PERSON", "ORGANIZATION", "LOCATION")
 
 # Mapping from ModelScope RaNER (MSRA schema) labels to normalized community types.
 _RANER_TYPE_MAP: dict[str, EntityType] = {
@@ -122,11 +124,16 @@ def _split_chunks(text: str, max_chunk_size: int) -> list[tuple[str, int]]:
 
 
 def _deduplicate_spans(candidates: list[EntitySpan]) -> list[EntitySpan]:
-    """Keep longer / higher-confidence non-overlapping spans sorted by character offset."""
+    """Keep regex / longer / higher-confidence non-overlapping spans sorted by offset."""
     selected: list[EntitySpan] = []
     ordered = sorted(
         candidates,
-        key=lambda item: (-(item.end - item.start), -item.confidence, item.start),
+        key=lambda item: (
+            0 if item.source == "basic-regex" else 1,
+            -(item.end - item.start),
+            -item.confidence,
+            item.start,
+        ),
     )
     for cand in ordered:
         if any(cand.start < existing.end and existing.start < cand.end for existing in selected):
@@ -199,7 +206,10 @@ class ModelScopeRaNERRecognizer:
             return []
 
         if len(text) <= self.max_chunk_size:
-            return _deduplicate_spans(self._detect_chunk(text, offset=0))
+            candidates = self._detect_chunk(text, offset=0)
+            if _regex_enabled():
+                candidates.extend(detect_basic_regex(text))
+            return _deduplicate_spans(candidates)
 
         chunks = _split_chunks(text, self.max_chunk_size)
         overlap = min(64, self.max_chunk_size // 3)
@@ -213,6 +223,8 @@ class ModelScopeRaNERRecognizer:
         candidates: list[EntitySpan] = []
         for chunk, off in windows:
             candidates.extend(self._detect_chunk(chunk, offset=off))
+        if _regex_enabled():
+            candidates.extend(detect_basic_regex(text))
         return _deduplicate_spans(candidates)
 
     def _detect_chunk(self, chunk: str, offset: int) -> list[EntitySpan]:
@@ -303,7 +315,18 @@ class DemoSampleRecognizer:
                     )
                 )
                 cursor = idx + len(term)
+        if _regex_enabled():
+            candidates.extend(detect_basic_regex(text))
         return _deduplicate_spans(candidates)
+
+
+def _regex_enabled() -> bool:
+    return os.environ.get("QINGJIAO_ENABLE_REGEX", "1").strip().lower() not in (
+        "0",
+        "false",
+        "no",
+        "off",
+    )
 
 
 _recognizer_lock = threading.Lock()
@@ -362,10 +385,9 @@ def runtime_engine_status() -> dict[str, Any]:
         "model_id": DEFAULT_RANER_MODEL if engine == "raner" else model_id,
         "modelscope_installed": modelscope_installed,
         "supported_entity_types": list(ALL_ENTITY_TYPES),
-        "rules_enabled": False,
+        "rules_enabled": _regex_enabled(),
         "notes": (
-            "Community Edition runs standalone Alibaba ModelScope RaNER (3 entity types, "
-            "no proprietary regex rules). For 30+ entity types, 0.923 F1 custom model, "
-            "PDF/Excel/OCR, and desktop installer, visit https://qingjiaolab.com."
+            "开源版搭载阿里 ModelScope RaNER + 5 类基础正则规则（共 8 类实体）。"
+            "如需 30+ 敏感字段、高精度自研引擎、PDF/Excel/OCR 与一键桌面安装包，请访问 https://qingjiaolab.com。"
         ),
     }

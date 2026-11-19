@@ -30,7 +30,7 @@ class McpServerTests(unittest.TestCase):
     def test_initialize_list_redact_and_restore(self) -> None:
         init = handle_message({"jsonrpc": "2.0", "id": 1, "method": "initialize"}, self.store)
         self.assertIsNotNone(init)
-        self.assertEqual(init["result"]["serverInfo"]["name"], "qingjiao-redact-community")
+        self.assertEqual(init["result"]["serverInfo"]["name"], "qingjiao-redact")
 
         tools = handle_message({"jsonrpc": "2.0", "id": 2, "method": "tools/list"}, self.store)
         names = [t["name"] for t in tools["result"]["tools"]]

@@ -39,17 +39,17 @@ from .store import SessionStore
 
 BENCHMARK_SUMMARY = {
     "community": {
-        "name": "青椒开源社区版（Community）",
-        "model": "阿里 ModelScope RaNER (base-news，纯模型，无商业规则)",
-        "model_size": "~400 MB (PyTorch)",
-        "entity_types_count": "3 类（人名 / 机构 / 地名）",
+        "name": "青椒智能脱敏 · 开源版",
+        "model": "阿里 ModelScope RaNER (base-news) + 5 类基础正则",
+        "model_size": "~400 MB 开源权重",
+        "entity_types_count": "8 类（人名 / 机构 / 地名 + 电话 / 邮箱 / 身份证 / 银行卡 / IP）",
         "cluener_person_f1": 0.790,
         "cluener_org_f1": 0.713,
         "cluener_org_cover_recall": 0.730,
         "cpu_speed": "单篇长文 ~55.3 s（约 0.8 s/块）",
         "formats": "TXT / Markdown / 基础 DOCX",
         "ocr_and_image": "不支持",
-        "deployment": "源码自部署 / Docker",
+        "deployment": "源码自部署 / Docker / MCP",
     },
     "pro": {
         "name": "青椒智能脱敏商业版（Desktop / Pro）",
@@ -88,11 +88,11 @@ def _parse_enabled_types(raw: str | None) -> list[EntityType]:
 
 def create_app(store: SessionStore | None = None) -> FastAPI:
     app = FastAPI(
-        title="Qingjiao Redact Community API",
+        title="青椒智能脱敏 · 开源版 API (Qingjiao Redact)",
         version=__version__,
         description=(
-            "Open-source local Chinese NER redaction, human review, reversible restore, "
-            "and MCP privacy gateway powered by Alibaba ModelScope RaNER."
+            "Open-source local Chinese NER + basic regex redaction, human review, "
+            "reversible restore, and MCP privacy gateway."
         ),
     )
 
@@ -206,7 +206,7 @@ def create_app(store: SessionStore | None = None) -> FastAPI:
     async def upload_document(
         file: UploadFile = File(...),
         mode: RedactionMode = Form("placeholder"),
-        enabled_types: str = Form("PERSON,ORGANIZATION,LOCATION"),
+        enabled_types: str = Form(",".join(ALL_ENTITY_TYPES)),
     ) -> DocumentSession:
         raw = await file.read()
         if not raw:

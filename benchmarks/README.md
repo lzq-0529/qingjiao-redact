@@ -2,11 +2,11 @@
 
 本目录用于公开说明 **青椒智能脱敏 · 开源社区版** 与 **青椒智能脱敏 · 商业专业版（Desktop / Pro）** 的识别能力差距与评测口径，避免夸大宣传，也帮助开发者与企业团队判断是否需要升级商业版。
 
-## 1. 社区版实测指标（阿里 ModelScope 开源 RaNER，纯模型）
+## 1. 社区版实测指标（阿里 ModelScope 开源 RaNER + 基础正则）
 
-- 模型：`iic/nlp_raner_named-entity-recognition_chinese-base-news`（MSRA 语料训练，约 400 MB PyTorch 权重）
-- 配置：**纯 NER 模型，不搭配商业规则引擎**
-- 支持实体：**3 类**（人名 `PERSON`、机构 `ORGANIZATION`、地名 `LOCATION`）
+- 模型：`iic/nlp_raner_named-entity-recognition_chinese-base-news`（MSRA 语料训练，约 400 MB 权重）
+- 基础正则：标准格式与校验位规则（`电话`、`邮箱`、`身份证号`、`银行卡号`、`IPv4`）
+- 支持实体：**8 类**（`PERSON`、`ORGANIZATION`、`LOCATION` + 5 类基础正则字段）
 
 ### 公开第三方数据集：CLUENER2020 dev（1,343 句新闻）
 

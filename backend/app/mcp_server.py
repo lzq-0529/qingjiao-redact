@@ -28,9 +28,9 @@ TOOL_SCHEMAS: list[dict[str, Any]] = [
     {
         "name": "redact_text",
         "description": (
-            "Locally redact Chinese PERSON, ORGANIZATION, and LOCATION entities using "
-            "Alibaba ModelScope RaNER and store a reversible placeholder mapping locally. "
-            "Returns redacted_text and session_id for later restoration."
+            "Locally redact Chinese entities (PERSON, ORGANIZATION, LOCATION) via Alibaba "
+            "ModelScope RaNER plus basic PII regex rules (PHONE, EMAIL, ID_CARD, "
+            "BANK_ACCOUNT, IP_ADDRESS), and store a reversible placeholder mapping locally."
         ),
         "inputSchema": {
             "type": "object",
@@ -197,7 +197,7 @@ def handle_message(message: dict[str, Any], store: SessionStore) -> dict[str, An
         response["result"] = {
             "protocolVersion": "2024-11-05",
             "capabilities": {"tools": {}},
-            "serverInfo": {"name": "qingjiao-redact-community", "version": __version__},
+            "serverInfo": {"name": "qingjiao-redact", "version": __version__},
         }
     elif method == "ping":
         response["result"] = {}

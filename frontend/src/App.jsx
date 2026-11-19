@@ -5,7 +5,14 @@ const ENTITY_META = {
   PERSON: { label: '人名', color: 'person' },
   ORGANIZATION: { label: '机构', color: 'org' },
   LOCATION: { label: '地名', color: 'loc' },
+  PHONE: { label: '电话', color: 'phone' },
+  EMAIL: { label: '邮箱', color: 'email' },
+  ID_CARD: { label: '身份证号', color: 'id' },
+  BANK_ACCOUNT: { label: '银行卡号', color: 'bank' },
+  IP_ADDRESS: { label: 'IP地址', color: 'ip' },
 };
+
+const ALL_TYPES = Object.keys(ENTITY_META);
 
 const MODES = [
   { id: 'placeholder', label: '可逆占位符', hint: '推荐，可 100% 还原' },
@@ -43,7 +50,7 @@ export default function App() {
   const [inputText, setInputText] = useState('');
   const [inputTitle, setInputTitle] = useState('');
   const [mode, setMode] = useState('placeholder');
-  const [enabledTypes, setEnabledTypes] = useState(['PERSON', 'ORGANIZATION', 'LOCATION']);
+  const [enabledTypes, setEnabledTypes] = useState(ALL_TYPES);
 
   const [activeTab, setActiveTab] = useState('workbench'); // workbench | restore
   const [restoreInput, setRestoreInput] = useState('');
@@ -300,10 +307,10 @@ export default function App() {
           <div className="brand-mark">椒</div>
           <div>
             <div className="brand-title">
-              青椒智能脱敏 <span className="badge-oss">开源社区版</span>
+              青椒智能脱敏 <span className="badge-oss">开源版</span>
             </div>
             <div className="brand-sub">
-              本地可逆脱敏 · 阿里 ModelScope RaNER 纯模型（3 类实体 · 无商业规则）
+              本地可逆脱敏 · 阿里 ModelScope RaNER + 基础正则（8 类敏感实体）
             </div>
           </div>
         </div>
@@ -311,7 +318,7 @@ export default function App() {
         <div className="topbar-actions">
           {capabilities && (
             <span className="engine-pill" title={capabilities.engine.model_id}>
-              引擎：{capabilities.engine.configured_engine === 'demo' ? 'Demo 预览模式' : 'ModelScope RaNER'}
+              引擎：{capabilities.engine.configured_engine === 'demo' ? 'Demo 预览模式' : 'RaNER + 基础正则'}
             </span>
           )}
           <button className="btn-outline" onClick={() => setShowCompare(true)}>
@@ -494,7 +501,7 @@ export default function App() {
             <div className="empty-state">
               <h2>把文档交给外部 AI 前，先在本地完成可逆脱敏</h2>
               <p>
-                本社区版基于阿里开源 <code>ModelScope RaNER</code>，纯本地识别中文人名、机构与地名，
+                开源版基于阿里开源 <code>ModelScope RaNER</code> 与基础正则规则，纯本地识别中文人名、机构、地名以及电话、邮箱、身份证号、银行卡号、IP 等 8 类常见字段，
                 替换为固定占位符（如 <code>{'{{人名_0001}}'}</code>），AI 改写后再按映射表 100% 严格还原。
               </p>
               <div className="empty-cta">
@@ -529,9 +536,11 @@ export default function App() {
                       value={manualType}
                       onChange={(e) => setManualType(e.target.value)}
                     >
-                      <option value="PERSON">人名</option>
-                      <option value="ORGANIZATION">机构</option>
-                      <option value="LOCATION">地名</option>
+                      {Object.entries(ENTITY_META).map(([id, meta]) => (
+                        <option key={id} value={id}>
+                          {meta.label}
+                        </option>
+                      ))}
                     </select>
                     <button className="btn-primary sm" onClick={handleAddManual}>
                       添加实体
@@ -703,11 +712,11 @@ export default function App() {
           </div>
 
           <div className="pro-card">
-            <div className="pro-card-title">社区版能力边界提示</div>
+            <div className="pro-card-title">开源版与商业版边界提示</div>
             <ul>
-              <li>社区版仅含阿里开源 RaNER（3 类实体，CLUENER 机构 F1 0.713，不含证件/金额/案号规则）</li>
+              <li>开源版搭载阿里 RaNER + 5 类基础正则（共 8 类，CLUENER 机构 F1 0.713）</li>
               <li>商业版：青椒自研高精度引擎（综合 F1 <strong>0.923</strong>，人名 <strong>0.982</strong>，结构化字段 <strong>0.959</strong>）</li>
-              <li>支持 30+ 敏感类、PDF 原位脱敏/真涂黑、Word/Excel/PPT、扫描件 OCR 与一键桌面安装包</li>
+              <li>覆盖 30+ 敏感类、PDF 原位脱敏/真涂黑、Word/Excel/PPT、扫描件 OCR 与一键桌面安装包</li>
             </ul>
             <a
               className="btn-primary full link-btn"
@@ -744,12 +753,12 @@ export default function App() {
               <tbody>
                 <tr>
                   <td>识别引擎</td>
-                  <td>阿里开源 ModelScope RaNER（纯模型，无规则）</td>
+                  <td>阿里开源 ModelScope RaNER + 5 类基础正则</td>
                   <td>青椒自研高精度本地识别引擎 + 全套商业校验规则</td>
                 </tr>
                 <tr>
                   <td>实体覆盖范围</td>
-                  <td>3 类（人名 / 机构 / 地名）</td>
+                  <td>8 类（人名/机构/地名 + 电话/邮箱/身份证/银行卡/IP）</td>
                   <td><strong>30+ 类敏感字段</strong> + 印章/签名/二维码/Logo 图像区</td>
                 </tr>
                 <tr>
@@ -759,8 +768,8 @@ export default function App() {
                 </tr>
                 <tr>
                   <td>结构化字段 F1</td>
-                  <td>不支持（无正则与上下文规则）</td>
-                  <td>未见盲测 <strong>0.959</strong>（字符遮盖率 0.981）</td>
+                  <td>基础格式校验（5 类常见字段）</td>
+                  <td>30+ 类含上下文语义校验，盲测 <strong>0.959</strong>（遮盖率 0.981）</td>
                 </tr>
                 <tr>
                   <td>运行开销与 CPU 速度</td>

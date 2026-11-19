@@ -373,6 +373,11 @@ button,
 .dot-person { background: #16a34a; }
 .dot-org { background: #d97706; }
 .dot-loc { background: #2563eb; }
+.dot-phone { background: #0d9488; }
+.dot-email { background: #7c3aed; }
+.dot-id { background: #dc2626; }
+.dot-bank { background: #ea580c; }
+.dot-ip { background: #0284c7; }
 
 .session-list {
   display: flex;
@@ -550,6 +555,11 @@ button,
 .hl-person { background: var(--person-bg); color: var(--person-ink); }
 .hl-org { background: var(--org-bg); color: var(--org-ink); }
 .hl-loc { background: var(--loc-bg); color: var(--loc-ink); }
+.hl-phone { background: #ccfbf1; color: #115e59; }
+.hl-email { background: #ede9fe; color: #5b21b6; }
+.hl-id { background: #fee2e2; color: #991b1b; }
+.hl-bank { background: #ffedd5; color: #9a3412; }
+.hl-ip { background: #e0f2fe; color: #075985; }
 
 .restore-pane {
   padding: 18px;
@@ -668,6 +678,11 @@ button,
 .tag-person { background: var(--person-bg); color: var(--person-ink); }
 .tag-org { background: var(--org-bg); color: var(--org-ink); }
 .tag-loc { background: var(--loc-bg); color: var(--loc-ink); }
+.tag-phone { background: #ccfbf1; color: #115e59; }
+.tag-email { background: #ede9fe; color: #5b21b6; }
+.tag-id { background: #fee2e2; color: #991b1b; }
+.tag-bank { background: #ffedd5; color: #9a3412; }
+.tag-ip { background: #e0f2fe; color: #075985; }
 
 .entity-text {
   font-weight: 600;
