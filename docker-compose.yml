@@ -3,7 +3,7 @@ services:
     build: .
     container_name: qingjiao-redact-community
     ports:
-      - "8000:8000"
+      - "127.0.0.1:8000:8000"
     environment:
       - QINGJIAO_NER_ENGINE=raner
       - QINGJIAO_RANER_MODEL=iic/nlp_raner_named-entity-recognition_chinese-base-news
