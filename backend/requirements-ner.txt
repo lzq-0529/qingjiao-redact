@@ -1,0 +1,6 @@
+# Alibaba ModelScope open-source Chinese NER (RaNER base-news) runtime
+modelscope>=1.18.0,<2.0.0
+torch>=2.1.0,<3.0.0
+transformers>=4.36.0,<5.0.0
+datasets<3.0.0
+numpy<2.0.0

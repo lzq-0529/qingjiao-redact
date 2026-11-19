@@ -1,0 +1,15 @@
+services:
+  qingjiao-community:
+    build: .
+    container_name: qingjiao-redact-community
+    ports:
+      - "8000:8000"
+    environment:
+      - QINGJIAO_NER_ENGINE=raner
+      - QINGJIAO_RANER_MODEL=iic/nlp_raner_named-entity-recognition_chinese-base-news
+      - MODELSCOPE_CACHE=/app/.model_cache/modelscope
+      - QINGJIAO_DATA_DIR=/app/data
+    volumes:
+      - ./data:/app/data
+      - ./.model_cache:/app/.model_cache
+    restart: unless-stopped
