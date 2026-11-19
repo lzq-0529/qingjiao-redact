@@ -714,8 +714,8 @@ export default function App() {
           <div className="pro-card">
             <div className="pro-card-title">开源版与商业版边界提示</div>
             <ul>
-              <li>开源版搭载阿里 RaNER + 5 类基础正则（共 8 类，CLUENER 机构 F1 0.713）</li>
-              <li>商业版：青椒自研高精度引擎（人名 F1 <strong>0.982</strong>，机构 <strong>0.942</strong>，结构化字段 <strong>0.959</strong>）</li>
+              <li>开源版搭载阿里 RaNER + 5 类基础正则（共 8 类，CLUENER 机构 F1 0.71）</li>
+              <li>商业版：青椒自研高精度引擎（人名 F1 <strong>0.98</strong>，机构 <strong>0.94</strong>，结构化字段 <strong>0.96</strong>）</li>
               <li>覆盖 30+ 敏感类、PDF 原位脱敏/真涂黑、Word/Excel/PPT、扫描件 OCR 与一键桌面安装包</li>
             </ul>
             <a
@@ -763,13 +763,13 @@ export default function App() {
                 </tr>
                 <tr>
                   <td>名称实体 F1（实测）</td>
-                  <td>CLUENER 人名 0.790 / 机构 <strong>0.713</strong></td>
-                  <td>人名 <strong>0.982</strong> / 机构 <strong>0.942</strong>（公告 0.950）/ 地址 <strong>0.930</strong> / 文件名 <strong>0.952</strong></td>
+                  <td>CLUENER 人名 0.79 / 机构 <strong>0.71</strong></td>
+                  <td>人名 <strong>0.98</strong> / 机构 <strong>0.94</strong>（公告 0.95）/ 地址 <strong>0.93</strong> / 文件名 <strong>0.95</strong></td>
                 </tr>
                 <tr>
                   <td>结构化字段 F1</td>
                   <td>基础格式校验（5 类常见字段）</td>
-                  <td>30+ 类含上下文语义校验，盲测 <strong>0.959</strong>（遮盖率 0.981）</td>
+                  <td>30+ 类含上下文语义校验，盲测 <strong>0.96</strong>（遮盖率 0.98）</td>
                 </tr>
                 <tr>
                   <td>运行开销与 CPU 速度</td>
